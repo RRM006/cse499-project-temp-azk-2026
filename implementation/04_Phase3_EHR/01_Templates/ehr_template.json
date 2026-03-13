@@ -1,0 +1,58 @@
+{
+  "patient_id": "AUTO_GENERATED",
+  "consultation_date": "AUTO_GENERATED",
+  "chief_complaint": {
+    "symptoms": [],
+    "duration": "",
+    "severity": ""
+  },
+  "medical_history": {
+    "diseases": [],
+    "current_medications": [],
+    "allergies": [],
+    "past_surgeries": [],
+    "family_history": []
+  },
+  "vital_signs": {
+    "blood_pressure": null,
+    "heart_rate": null,
+    "temperature": null,
+    "respiratory_rate": null,
+    "oxygen_saturation": null
+  },
+  "assessment_and_plan": {
+    "impression": "",
+    "recommendations": [],
+    "follow_up": "",
+    "referrals": []
+  },
+  "social_history": {
+    "smoking": "",
+    "alcohol": "",
+    "occupation": ""
+  },
+  "review_of_systems": {
+    "constitutional": "",
+    "cardiovascular": "",
+    "respiratory": "",
+    "gastrointestinal": "",
+    "neurological": ""
+  },
+  "raw_transcription": "",
+  "extracted_entities": {
+    "symptoms": [],
+    "diseases": [],
+    "medications": [],
+    "durations": [],
+    "allergies": [],
+    "body_parts": [],
+    "treatments": [],
+    "dosages": []
+  },
+  "metadata": {
+    "source": "voice_input",
+    "dialect": "",
+    "language": "bn",
+    "processing_version": "1.0.0"
+  }
+}

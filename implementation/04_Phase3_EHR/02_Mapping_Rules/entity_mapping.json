@@ -1,0 +1,127 @@
+# Entity to EHR Field Mapping Configuration
+# Maps NER entity types to EHR template fields
+
+ENTITY_MAPPING = {
+    "SYMPTOM": {
+        "ehr_field": "chief_complaint.symptoms",
+        "ehr_array_item": {
+            "name": "entity.text",
+            "duration": "linked_duration"
+        },
+        "multiple": true,
+        "linked_fields": ["DURATION"]
+    },
+    
+    "DISEASE": {
+        "ehr_field": "medical_history.diseases",
+        "ehr_array_item": "entity.text",
+        "multiple": true,
+        "linked_fields": []
+    },
+    
+    "MEDICATION": {
+        "ehr_field": "medical_history.current_medications",
+        "ehr_array_item": {
+            "name": "entity.text",
+            "dosage": "linked_dosage"
+        },
+        "multiple": true,
+        "linked_fields": ["DOSAGE"]
+    },
+    
+    "DURATION": {
+        "ehr_field": "chief_complaint.duration",
+        "ehr_array_item": "entity.text",
+        "multiple": false,
+        "linked_fields": []
+    },
+    
+    "ALLERGY": {
+        "ehr_field": "medical_history.allergies",
+        "ehr_array_item": "entity.text",
+        "multiple": true,
+        "linked_fields": []
+    },
+    
+    "BODY_PART": {
+        "ehr_field": "extracted_entities.body_parts",
+        "ehr_array_item": "entity.text",
+        "multiple": true,
+        "linked_fields": []
+    },
+    
+    "TREATMENT": {
+        "ehr_field": "assessment_and_plan.recommendations",
+        "ehr_array_item": "entity.text",
+        "multiple": true,
+        "linked_fields": []
+    },
+    
+    "DOSAGE": {
+        "ehr_field": "extracted_entities.dosages",
+        "ehr_array_item": "entity.text",
+        "multiple": true,
+        "linked_fields": []
+    }
+}
+
+
+CONTEXT_RULES = {
+    "link_symptom_duration": {
+        "description": "Link duration to most recent symptom",
+        "entity_pair": ["SYMPTOM", "DURATION"],
+        "link_to": "chief_complaint.symptoms[].duration"
+    },
+    
+    "link_medication_dosage": {
+        "description": "Link dosage to most recent medication",
+        "entity_pair": ["MEDICATION", "DOSAGE"],
+        "link_to": "medical_history.current_medications[].dosage"
+    },
+    
+    "body_part_context": {
+        "description": "Body part is context for symptom",
+        "entity_pair": ["BODY_PART", "SYMPTOM"],
+        "link_to": "chief_complaint.symptoms[].body_part"
+    }
+}
+
+
+VALIDATION_RULES = {
+    "required_fields": [
+        "patient_id",
+        "consultation_date"
+    ],
+    
+    "min_entities": {
+        "symptoms": 1,
+        "diseases": 0,
+        "medications": 0,
+        "allergies": 0
+    },
+    
+    "max_entities": {
+        "symptoms": 20,
+        "diseases": 10,
+        "medications": 15,
+        "allergies": 10
+    }
+}
+
+
+OUTPUT_FORMATS = {
+    "json": {
+        "extension": ".json",
+        "description": "Structured JSON format"
+    },
+    
+    "text": {
+        "extension": ".txt",
+        "description": "Human-readable text format"
+    },
+    
+    "markdown": {
+        "extension": ".md",
+        "description": "Markdown format"
+    }
+}

@@ -453,9 +453,9 @@ Include version numbers and brief comments.
 
 | Replace | With |
 |---------|------|
-| [path/to/input] | /content/drive/MyDrive/CSE499/data/input |
-| [path/to/output] | /content/drive/MyDrive/CSE499/models/output |
-| [path/to/model] | /content/drive/MyDrive/CSE499/models/whisper-finetuned |
+| [path/to/input] | /content/drive/MyDrive/CSE499_Project/implementation/01_Dataset/03_Processed_Audio/train |
+| [path/to/output] | /content/drive/MyDrive/CSE499_Project/implementation/02_Phase1_ASR/04_Results |
+| [path/to/model] | /content/drive/MyDrive/CSE499_Project/implementation/02_Phase1_ASR/02_Models/whisper_finetuned |
 | [path/to/audio.wav] | actual audio file path |
 | [Bengali text string] | actual Bengali text |
 

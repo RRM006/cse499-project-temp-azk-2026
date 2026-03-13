@@ -185,25 +185,39 @@ All resources are free. No paid services required.
 ### Google Drive Structure
 ```
 My Drive/CSE499_Project/
-├── 01_Dataset/
-│   ├── raw_audio/
-│   ├── transcripts/
-│   └── processed/
-├── 02_Phase1_ASR/
-│   ├── models/
-│   ├── scripts/
-│   └── results/
-├── 03_Phase2_NER/
-│   ├── models/
-│   ├── data/
-│   └── results/
-├── 04_Phase3_EHR/
-│   ├── templates/
-│   └── scripts/
-├── 05_Integration/
-├── 06_Documentation/
-├── 07_Presentation/
-└── 08_Backups/
+├── implementation/              # All project implementation files
+│   ├── 00_Setup/              # Environment setup scripts
+│   ├── 01_Dataset/            # Dataset (audio, transcriptions, annotations)
+│   │   ├── 01_Raw_Audio/     # Original downloaded audio
+│   │   ├── 02_Transcriptions/ # Manual transcriptions
+│   │   ├── 03_Processed_Audio/ # Preprocessed audio
+│   │   ├── 04_Annotations/   # NER annotations
+│   │   └── 05_Metadata/      # Dataset metadata
+│   ├── 02_Phase1_ASR/        # Phase 1: Speech Recognition
+│   │   ├── 01_Baseline/      # Baseline model tests
+│   │   ├── 02_Models/        # Trained models
+│   │   ├── 03_Scripts/       # Training scripts
+│   │   ├── 04_Results/       # WER scores, evaluations
+│   │   └── 05_Transcripts/  # Output transcriptions
+│   ├── 03_Phase2_NER/        # Phase 2: Entity Recognition
+│   │   ├── 01_Annotation_Tools/ # Annotation guidelines
+│   │   ├── 02_Data/          # NER dataset (train/val/test)
+│   │   ├── 03_Models/        # Trained NER models
+│   │   ├── 04_Scripts/       # Training scripts
+│   │   └── 05_Results/       # F1 scores, evaluations
+│   ├── 04_Phase3_EHR/        # Phase 3: EHR Generation
+│   │   ├── 01_Templates/     # EHR templates (JSON)
+│   │   ├── 02_Mapping_Rules/ # Entity to field mapping
+│   │   ├── 03_Scripts/      # Generation scripts
+│   │   └── 04_Samples/      # Sample outputs
+│   ├── 05_Integration/      # Complete pipeline
+│   │   ├── 01_Pipeline/     # Main pipeline code
+│   │   ├── 02_Demo/         # Demo notebooks
+│   │   └── 03_Testing/      # Integration tests
+│   └── 08_Shared_Resources/ # Utilities, constants
+├── guide/                    # Project guides & documentation
+├── 07_Backups/              # Backup files
+└── 07_Presentation/         # Presentation materials
 ```
 
 ### GitHub Structure
@@ -212,11 +226,16 @@ cse499-bangla-ehr/
 ├── .gitignore
 ├── README.md
 ├── requirements.txt
-├── phase1_asr/
-├── phase2_ner/
-├── phase3_ehr/
-├── notebooks/
-└── docs/
+├── implementation/            # All code goes here
+│   ├── 00_Setup/
+│   ├── 01_Dataset/          # (Don't commit large files)
+│   ├── 02_Phase1_ASR/
+│   ├── 03_Phase2_NER/
+│   ├── 04_Phase3_EHR/
+│   ├── 05_Integration/
+│   └── 08_Shared_Resources/
+├── guide/                   # Guide documentation
+└── docs/                    # Additional docs
 ```
 
 ---
