@@ -1,0 +1,13 @@
+model,puran_dhaka,puran_dhaka_correct,puran_dhaka_total,barishal,barishal_correct,barishal_total,sylheti,sylheti_correct,sylheti_total,normal_bangla,normal_bangla_correct,normal_bangla_total,indian_bangla,indian_bangla_correct,indian_bangla_total,OVERALL
+wav2vec2_xlsr_300m_bn,,0,0,0.0,0,47,,0,0,0.041,2,49,0.0,0,50,0.014
+wav2vec2_xlsr53_bn,,0,0,0.0,0,47,,0,0,0.0,0,50,0.0,0,50,0.0
+vakyansh_bn,,0,0,0.0,0,47,,0,0,0.061,3,49,0.2,10,50,0.089
+wav2vec2_xlsr_cv_bn,,0,0,0.0,0,8,,0,0,0.163,8,49,0.082,4,49,0.113
+whisper_small,,0,0,0.0,0,47,,0,0,0.0,0,50,0.0,0,50,0.0
+whisper_medium,,0,0,0.0,0,47,,0,0,0.0,0,50,0.0,0,50,0.0
+whisper_v3_turbo,,0,0,0.0,0,47,,0,0,0.0,0,50,0.0,0,50,0.0
+bengaliai_whisper,,0,0,0.0,0,47,,0,0,0.1,5,50,0.4,20,50,0.17
+bengaliai_regional,,0,0,0.0,0,47,,0,0,0.06,3,50,0.38,19,50,0.15
+mms,,0,0,0.0,0,47,,0,0,0.122,6,49,0.16,8,50,0.096
+seamlessm4t,,0,0,0.0,0,47,,0,0,0.02,1,50,0.02,1,50,0.014
+whisper_large_v3,,0,0,0.0,0,47,,0,0,0.0,0,50,0.0,0,50,0.0

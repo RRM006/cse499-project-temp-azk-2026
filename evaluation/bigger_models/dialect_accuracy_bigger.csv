@@ -1,0 +1,7 @@
+model,puran_dhaka,barishal,sylheti,normal_bangla,indian_bangla,OVERALL
+qwen2_audio_direct,,0.0,,0.0,0.0,0.0
+qwen2_audio_via_english,,0.0,,0.0,0.0,0.0
+voxtral_mini,,0.0,,0.0,0.0,0.0
+phi4_multimodal,,,,,,
+qwen3_asr,,0.0,,0.0,0.0,0.0
+qwen25_omni,,,,,,

@@ -1,0 +1,491 @@
+% =====================================================================
+%  CSE499A — EHR Pre-Consultation Medical Documentation System
+%  Standalone section: Related Works
+%  Authors: Rafiur Rahman Mashrafi (2221971042),
+%           M.G. Rabbi Hossen (2222516042),
+%           Israt Zaman Srity (2211084042)
+%  Advisor: Dr. Mohammad Ashrafuzzaman Khan [AzK]
+%  Department of Electrical and Computer Engineering,
+%  North South University · Spring 2026
+% =====================================================================
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+\onehalfspacing
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{1.5em}
+
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{0.7em}{}
+
+\title{\bfseries Related Works:\\
+EHR-Based Pre-Consultation Medical Documentation System}
+\author{Rafiur Rahman Mashrafi (ID 2221971042)\\
+        M.~G.~Rabbi Hossen (ID 2222516042)\\
+        Israt Zaman Srity (ID 2211084042)\\[6pt]
+        \emph{Faculty Advisor:} Dr. Mohammad Ashrafuzzaman Khan [AzK]\\
+        Department of Electrical and Computer Engineering\\
+        North South University, Bangladesh}
+\date{Senior Design Project (CSE499A) \quad Spring 2026}
+
+\begin{document}
+\maketitle
+
+\section{Scope of the Review}
+
+The proposed system is a voice-driven pipeline that turns a
+patient's spoken description --- in dialectal, code-mixed Bangla
+--- into a structured Electronic Health Record (EHR) for the
+attending physician. Because the pipeline integrates work from
+several research streams, this related-works review is organized
+into seven sub-areas: (i)~multilingual and large-scale automatic
+speech recognition (ASR), (ii)~the recent generation of multimodal
+audio language models, (iii)~Bangla-specific speech resources and
+benchmarks, (iv)~clinical and biomedical natural language
+processing, (v)~commercial AI clinical scribes and existing
+voice-driven EHR products, (vi)~parameter-efficient fine-tuning
+and audio-domain adaptation, and (vii)~AI ethics and governance for
+clinical machine learning. Each subsection identifies how the
+present project differs from, builds on, or extends the cited work.
+
+\section{Multilingual and Large-Scale ASR}
+
+Modern speech recognition is dominated by large self-supervised and
+weakly supervised neural models trained on web-scale multilingual
+audio. Radford et al.~\cite{rw:whisper} introduced
+\textbf{Whisper}, an encoder--decoder Transformer trained on
+$\sim$680{,}000 hours of weakly labeled multilingual audio that
+achieves strong zero-shot performance across nearly 100 languages
+including Bangla. Pratap et al.~\cite{rw:mms} released the
+\textbf{Massively Multilingual Speech (MMS)} project, which extends
+ASR coverage to over 1{,}100 languages by combining religious-text
+audio with self-supervised pre-training and CTC fine-tuning. Baevski
+et al.~\cite{rw:wav2vec2} proposed \textbf{wav2vec~2.0}, a
+self-supervised speech-representation framework, and Conneau et
+al.~\cite{rw:xlsr} extended it cross-lingually as XLSR-53;
+both underpin many open Bangla ASR variants. The Seamless
+Communication team's \textbf{SeamlessM4T}~\cite{rw:seamless}
+unifies speech-to-text, text-to-text, and speech-to-speech
+translation across a wide range of languages.
+
+The original Transformer architecture~\cite{rw:vaswani} provides the
+backbone of all of these models, while attention-mechanism
+extensions for long-form audio (e.g.\ chunked attention) have
+addressed the practical 30-second context limit that constrains
+naive Whisper deployment. None of the above papers specifically
+report results on dialectal Bangla clinical speech, which is the
+precise gap the present project investigates.
+
+\section{Multimodal Audio Language Models}
+
+A recent direction fuses speech encoders with autoregressive
+language-model decoders to create a single unified audio-LLM.
+Chu et al.~\cite{rw:qwen2audio} introduced the \textbf{Qwen2-Audio}
+family, and the same group followed with the specialized
+\textbf{Qwen3-ASR-1.7B} variant. Mistral AI's
+\textbf{Voxtral-Mini}~\cite{rw:voxtral} and Microsoft's
+\textbf{Phi-4 Multimodal}~\cite{rw:phi4} extend this direction.
+While these models report strong multilingual benchmarks on read
+speech, their out-of-distribution behavior on dialect-rich
+low-resource speech has been studied relatively little. The
+empirical contribution of CSE499A is precisely on this point: a
+controlled comparison showed that on real Bangladeshi dialect
+audio, the smaller Bangla-specialized BengaliAI Regional model
+outperformed all six 1.7B--7B parameter audio LLMs by more than
+50 percentage points of WER --- a finding that does not appear in
+any of the cited papers.
+
+\section{Bangla Speech Resources and Benchmarks}
+
+For Bengali specifically, several public resources exist.
+The \textbf{Bengali.AI Speech Recognition
+Competition}~\cite{rw:bengaliai} on Kaggle (2023) produced a
+read-aloud Bengali benchmark and motivated several fine-tuned
+Whisper and Wav2Vec~2.0 variants used in this project's baseline.
+Mozilla's \textbf{Common Voice}~\cite{rw:commonvoice} provides a
+crowdsourced Bengali corpus collected from volunteer speakers
+worldwide. AI4Bharat's \textbf{IndicWav2Vec}~\cite{rw:indicwav2vec}
+extends self-supervised speech models to twenty-two Indic
+languages, and the \textbf{Vakyansh}~\cite{rw:vakyansh} project
+releases ASR models tuned for Indic ASR including Bengali. The
+\textbf{Shrutilipi} dataset~\cite{rw:shrutilipi} provides
+$\sim$6{,}400 hours of paired audio--text data across twelve Indic
+languages and is one of the largest open Bangla speech resources.
+
+Most relevantly, Rakib et al.~\cite{rw:oodspeech} released the
+\textbf{OOD-Speech} dataset, an out-of-distribution Bengali ASR
+corpus that explicitly tests model robustness on speech that differs
+from the training distribution. OOD-Speech is the closest published
+work to the present project's dialect-aware focus. The two projects
+differ in two important respects: OOD-Speech examines OOD-ness in
+general (speaker, recording condition, register), while the current
+project specifically targets the simultaneous combination of
+\emph{dialect}, \emph{Bangla--English code-mixing}, and
+\emph{clinical/informal register}. This intersection has not been
+benchmarked in published work to date.
+
+\section{Clinical and Biomedical NLP}
+
+On the language-modeling side, Bhattacharjee et
+al.~\cite{rw:banglabert} introduced \textbf{BanglaBERT}, a Bangla
+BERT-style language model with benchmarks for multiple downstream
+Bangla NLP tasks; this is the most likely starting point for the
+medical NER work planned for CSE499B. For the medical domain, Lee
+et al.~\cite{rw:biobert} released \textbf{BioBERT}, a BERT model
+pretrained on PubMed abstracts and PMC full-text articles, and
+Alsentzer et al.~\cite{rw:clinicalbert} released
+\textbf{ClinicalBERT}, pretrained on MIMIC-III clinical notes;
+both established that domain-adaptive pretraining substantially
+improves downstream clinical extraction tasks.
+
+Domain-specific clinical NLP also includes
+\textbf{SciBERT}~\cite{rw:scibert} for scientific text and
+\textbf{BlueBERT}~\cite{rw:bluebert}, which combines PubMed and
+MIMIC-III pretraining. The original Transformer
+architecture~\cite{rw:vaswani} and the BERT
+encoder~\cite{rw:bert} underpin all of the above. The
+Hugging~Face Transformers library~\cite{rw:transformers}
+provides reference implementations and is the primary tooling used
+in the present project.
+
+A clear gap exists for Bangla: there is no published Bangla
+equivalent of BioBERT or ClinicalBERT, no public Bangla medical NER
+dataset, and no published clinical extraction benchmark in Bangla.
+The CSE499B medical-NER component of this project, when delivered,
+will be a small first step in this direction.
+
+\section{Commercial AI Clinical Scribes and Voice EHR Systems}
+
+The closest commercial analogues to the proposed system are the
+recent generation of ``ambient AI scribes,'' which listen to a
+doctor--patient conversation and generate a structured note. The
+market-leading systems are \textbf{Nuance DAX
+Copilot}~\cite{rw:nuance}, \textbf{DeepScribe}~\cite{rw:deepscribe},
+\textbf{Abridge}~\cite{rw:abridge}, and \textbf{Suki AI}. Common
+across these products are: (i)~English-only language coverage,
+(ii)~deployment in well-resourced Western hospital systems, and
+(iii)~tight integration with U.S.\ EHR platforms (Epic, Cerner).
+None of them addresses Bangla, and none is designed for the
+constraints of small Bangladeshi clinics: intermittent connectivity,
+cost sensitivity, low patient digital literacy, and the absence of
+a baseline EHR system to integrate against.
+
+A second, older line of work concerns voice-driven EHR data entry
+by physicians (e.g.\ Dragon Medical One). These systems treat the
+doctor as the speaker, dictating after the visit. The present
+project differs structurally: the \emph{patient} is the speaker,
+during the wait, and the artifact produced is the \emph{intake
+record} consulted by the physician at the start of the consultation.
+
+\section{Parameter-Efficient Fine-Tuning and Domain Adaptation}
+
+Hu et al.~\cite{rw:lora} introduced \textbf{Low-Rank
+Adaptation (LoRA)}, which freezes the base model's weights and
+trains only small low-rank adapter matrices, dramatically reducing
+the compute and memory footprint of fine-tuning. LoRA and related
+parameter-efficient fine-tuning (PEFT) techniques are now the
+standard approach for adapting large speech and language models to
+low-resource domains, and are the planned methodology for the
+CSE499B fine-tuning phase of this project.
+
+Houlsby et al.~\cite{rw:adapters} originally introduced adapter
+modules in NLP and motivated the idea of inserting small trainable
+layers into a frozen pretrained model. Bain et
+al.'s~\cite{rw:whisperx} \textbf{WhisperX} provides robust
+long-form audio transcription with forced alignment and
+voice-activity detection; it is used in the audio-preprocessing
+pipeline of the current project to segment long audio recordings
+into the 10--15-second clips that the evaluated ASR models can
+accept. Bredin et al.~\cite{rw:pyannote} released the
+\textbf{pyannote.audio} library for speaker diarization and
+voice-activity detection, which is the upstream of WhisperX's
+alignment.
+
+\section{AI Ethics and Governance for Clinical ML}
+
+Because the system handles sensitive health data, prior work in
+clinical AI ethics is directly relevant. The
+\textbf{ACM Code of Ethics and Professional
+Conduct}~\cite{rw:acm2018} provides the most concrete professional
+guidance for software-systems work and has shaped the project's
+patient-consent and transparency design. Beauchamp and Childress's
+canonical \textbf{Principles of Biomedical
+Ethics}~\cite{rw:beauchamp} (autonomy, non-maleficence, beneficence,
+justice) is the framework physicians themselves use, and the
+project's choice to keep the doctor as the final decision-maker is
+grounded in patient autonomy and the principle of non-maleficence.
+The \textbf{WHO guidance on the ethics and governance of AI for
+health}~\cite{rw:whoethics} (2021) lays out six guiding
+principles that have shaped the project's framing of human
+oversight, transparency, and equitable access.
+
+For a treatment of the broader risk surface introduced by clinical
+ML, Char et al.~\cite{rw:char} and Vayena et
+al.~\cite{rw:vayena} are widely cited surveys.
+
+\section{Positioning of the Present Project}
+
+The literature surveyed above shows that:
+
+\begin{enumerate}[leftmargin=*]
+\item There is mature open-source ASR for many high-resource
+languages, but \emph{no benchmark for dialect-aware Bangla clinical
+speech}. The Phase~2 results of this project (twelve baseline
+models tested on a 4.7-hour multi-dialect corpus) help close that
+gap.
+\item Larger multimodal audio LLMs offer impressive generic
+capability, but their behavior on dialect-rich low-resource
+speech is largely unstudied. The Phase~3 results of this project
+(six audio LLMs tested on the same corpus) offer a controlled
+empirical observation that scaling alone does not solve dialect
+Bangla ASR.
+\item Clinical NLP infrastructure (BioBERT, ClinicalBERT,
+ambient scribes) exists for English but \emph{does not exist for
+Bangla}. The proposed end-to-end pipeline contributes a first step
+toward Bangla clinical NLP infrastructure.
+\item Parameter-efficient fine-tuning is the established way to
+adapt large speech models to a new domain on a limited compute
+budget, and is the planned approach for CSE499B.
+\item Existing commercial ambient AI scribes target English-language
+Western hospital workflows and do not transfer to small
+Bangladeshi clinics, motivating a new design rather than a
+re-skinning of existing products.
+\end{enumerate}
+
+To the best of the team's knowledge, no published end-to-end
+voice-to-EHR system targets Bangla clinical use, and no published
+benchmark addresses dialect, code-mixing, and informal clinical
+register simultaneously. These two observations define the
+contribution that the project aims to make over CSE499A and
+CSE499B.
+
+% =====================================================================
+% REFERENCES
+% =====================================================================
+\begin{thebibliography}{99}
+
+\bibitem{rw:whisper}
+A.~Radford, J.~W.~Kim, T.~Xu, G.~Brockman, C.~McLeavey,
+and I.~Sutskever,
+``Robust Speech Recognition via Large-Scale Weak Supervision,''
+in \emph{Proc.\ 40th Int.\ Conf.\ on Machine Learning (ICML)},
+pp.~28492--28518, 2023.
+\url{https://arxiv.org/abs/2212.04356}.
+
+\bibitem{rw:mms}
+V.~Pratap \emph{et al.},
+``Scaling Speech Technology to 1{,}000+ Languages,''
+\emph{arXiv preprint arXiv:2305.13516}, 2023.
+\url{https://arxiv.org/abs/2305.13516}.
+
+\bibitem{rw:wav2vec2}
+A.~Baevski, Y.~Zhou, A.~Mohamed, and M.~Auli,
+``wav2vec 2.0: A Framework for Self-Supervised Learning of Speech
+Representations,''
+in \emph{Advances in Neural Information Processing Systems
+(NeurIPS)}, vol.~33, pp.~12449--12460, 2020.
+\url{https://arxiv.org/abs/2006.11477}.
+
+\bibitem{rw:xlsr}
+A.~Conneau, A.~Baevski, R.~Collobert, A.~Mohamed, and M.~Auli,
+``Unsupervised Cross-Lingual Representation Learning for Speech
+Recognition,''
+in \emph{Proc.\ INTERSPEECH 2021}, pp.~2426--2430.
+\url{https://arxiv.org/abs/2006.13979}.
+
+\bibitem{rw:seamless}
+Seamless Communication Team \emph{et al.},
+``SeamlessM4T: Massively Multilingual and Multimodal Machine
+Translation,''
+\emph{arXiv preprint arXiv:2308.11596}, 2023.
+\url{https://arxiv.org/abs/2308.11596}.
+
+\bibitem{rw:vaswani}
+A.~Vaswani \emph{et al.},
+``Attention Is All You Need,''
+in \emph{Advances in Neural Information Processing Systems
+(NeurIPS)}, vol.~30, 2017.
+\url{https://arxiv.org/abs/1706.03762}.
+
+\bibitem{rw:qwen2audio}
+Y.~Chu \emph{et al.},
+``Qwen2-Audio Technical Report,''
+\emph{arXiv preprint arXiv:2407.10759}, 2024.
+\url{https://arxiv.org/abs/2407.10759}.
+
+\bibitem{rw:voxtral}
+Mistral AI,
+``Voxtral: Open Multilingual Speech-to-Text Models.''
+\url{https://mistral.ai/news/voxtral/},
+2024. Online; accessed April 2026.
+
+\bibitem{rw:phi4}
+Microsoft Research,
+``Phi-4 Multimodal: Compact Multimodal Foundation Models,''
+2024. \url{https://huggingface.co/microsoft/Phi-4-multimodal-instruct}.
+
+\bibitem{rw:bengaliai}
+Bengali.AI,
+``Bengali.AI Speech Recognition Competition,''
+Kaggle, 2023.
+\url{https://www.kaggle.com/competitions/bengaliai-speech}.
+
+\bibitem{rw:commonvoice}
+R.~Ardila \emph{et al.},
+``Common Voice: A Massively-Multilingual Speech Corpus,''
+in \emph{Proc.\ 12th Language Resources and Evaluation Conf.\
+(LREC)}, pp.~4218--4222, 2020.
+\url{https://commonvoice.mozilla.org}.
+
+\bibitem{rw:indicwav2vec}
+AI4Bharat,
+``IndicWav2Vec: Self-Supervised Speech Models for Indian Languages,''
+2022. \url{https://github.com/AI4Bharat/IndicWav2Vec}.
+
+\bibitem{rw:vakyansh}
+A.~Gupta \emph{et al.},
+``Vakyansh: ASR Toolkit for Low Resource Indic Languages,''
+2022. \url{https://github.com/Open-Speech-EkStep/vakyansh-models}.
+
+\bibitem{rw:shrutilipi}
+K.~Bhogale \emph{et al.},
+``Effectiveness of Mining Audio and Text Pairs from Public Data for
+Improving ASR Systems for Low-Resource Languages,''
+in \emph{Proc.\ ICASSP 2023}.
+\url{https://arxiv.org/abs/2208.12666}.
+
+\bibitem{rw:oodspeech}
+F.~R.~Rakib \emph{et al.},
+``OOD-Speech: A Large Bengali Speech Recognition Dataset for
+Out-of-Distribution Benchmarking,''
+in \emph{Proc.\ INTERSPEECH 2023}.
+\url{https://arxiv.org/abs/2305.09688}.
+
+\bibitem{rw:banglabert}
+A.~Bhattacharjee \emph{et al.},
+``BanglaBERT: Language Model Pretraining and Benchmarks for
+Low-Resource Language Understanding Evaluation in Bangla,''
+in \emph{Findings of NAACL 2022}, pp.~1318--1327.
+\url{https://github.com/csebuetnlp/banglabert}.
+
+\bibitem{rw:biobert}
+J.~Lee \emph{et al.},
+``BioBERT: A Pre-Trained Biomedical Language Representation Model
+for Biomedical Text Mining,''
+\emph{Bioinformatics}, vol.~36, no.~4, pp.~1234--1240, 2020.
+\url{https://arxiv.org/abs/1901.08746}.
+
+\bibitem{rw:clinicalbert}
+E.~Alsentzer \emph{et al.},
+``Publicly Available Clinical BERT Embeddings,''
+in \emph{Proc.\ 2nd Clinical NLP Workshop, NAACL 2019},
+pp.~72--78.
+\url{https://arxiv.org/abs/1904.03323}.
+
+\bibitem{rw:scibert}
+I.~Beltagy, K.~Lo, and A.~Cohan,
+``SciBERT: A Pretrained Language Model for Scientific Text,''
+in \emph{Proc.\ EMNLP-IJCNLP 2019}.
+\url{https://arxiv.org/abs/1903.10676}.
+
+\bibitem{rw:bluebert}
+Y.~Peng, S.~Yan, and Z.~Lu,
+``Transfer Learning in Biomedical Natural Language Processing:
+An Evaluation of BERT and ELMo on Ten Benchmarking Datasets,''
+in \emph{Proc.\ BioNLP 2019 Workshop}.
+\url{https://arxiv.org/abs/1906.05474}.
+
+\bibitem{rw:bert}
+J.~Devlin, M.-W.~Chang, K.~Lee, and K.~Toutanova,
+``BERT: Pre-training of Deep Bidirectional Transformers for
+Language Understanding,''
+in \emph{Proc.\ NAACL-HLT 2019}, pp.~4171--4186.
+\url{https://arxiv.org/abs/1810.04805}.
+
+\bibitem{rw:transformers}
+T.~Wolf \emph{et al.},
+``Transformers: State-of-the-Art Natural Language Processing,''
+in \emph{Proc.\ EMNLP 2020: System Demonstrations}, pp.~38--45.
+\url{https://github.com/huggingface/transformers}.
+
+\bibitem{rw:nuance}
+Microsoft / Nuance Communications,
+``Nuance DAX Copilot --- Ambient AI Documentation.''
+\url{https://www.nuance.com/healthcare/dragon-ai-clinical-solutions/dax-copilot.html}.
+Online; accessed April 2026.
+
+\bibitem{rw:deepscribe}
+DeepScribe Inc.,
+``DeepScribe AI Medical Scribe.''
+\url{https://www.deepscribe.ai}. Online; accessed April 2026.
+
+\bibitem{rw:abridge}
+Abridge AI Inc.,
+``Abridge: Generative AI for Clinical Conversations.''
+\url{https://www.abridge.com}. Online; accessed April 2026.
+
+\bibitem{rw:lora}
+E.~J.~Hu \emph{et al.},
+``LoRA: Low-Rank Adaptation of Large Language Models,''
+in \emph{Int.\ Conf.\ on Learning Representations (ICLR)}, 2022.
+\url{https://arxiv.org/abs/2106.09685}.
+
+\bibitem{rw:adapters}
+N.~Houlsby \emph{et al.},
+``Parameter-Efficient Transfer Learning for NLP,''
+in \emph{Proc.\ ICML 2019}.
+\url{https://arxiv.org/abs/1902.00751}.
+
+\bibitem{rw:whisperx}
+M.~Bain, J.~Huh, T.~Han, and A.~Zisserman,
+``WhisperX: Time-Accurate Speech Transcription of Long-Form Audio,''
+in \emph{Proc.\ INTERSPEECH 2023}.
+\url{https://arxiv.org/abs/2303.00747}.
+
+\bibitem{rw:pyannote}
+H.~Bredin \emph{et al.},
+``pyannote.audio: Neural Building Blocks for Speaker Diarization,''
+in \emph{Proc.\ ICASSP 2020}.
+\url{https://github.com/pyannote/pyannote-audio}.
+
+\bibitem{rw:acm2018}
+ACM Council,
+``ACM Code of Ethics and Professional Conduct,'' 2018.
+\url{https://www.acm.org/code-of-ethics}.
+
+\bibitem{rw:beauchamp}
+T.~L.~Beauchamp and J.~F.~Childress,
+\emph{Principles of Biomedical Ethics}, 8th ed.,
+Oxford University Press, 2019.
+
+\bibitem{rw:whoethics}
+World Health Organization,
+``Ethics and Governance of Artificial Intelligence for Health,''
+WHO Guidance, 2021.
+\url{https://www.who.int/publications/i/item/9789240029200}.
+
+\bibitem{rw:char}
+D.~S.~Char, N.~H.~Shah, and D.~Magnus,
+``Implementing Machine Learning in Health Care --- Addressing
+Ethical Challenges,''
+\emph{New England Journal of Medicine}, vol.~378, pp.~981--983,
+2018.
+
+\bibitem{rw:vayena}
+E.~Vayena, A.~Blasimme, and I.~G.~Cohen,
+``Machine Learning in Medicine: Addressing Ethical Challenges,''
+\emph{PLOS Medicine}, vol.~15, no.~11, e1002689, 2018.
+
+\end{thebibliography}
+
+\end{document}

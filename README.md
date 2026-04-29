@@ -154,33 +154,34 @@ The system processes patient voice through three phases:
 ## Repository Structure
 
 ```
-CSE499_Project/
-├── guide/                      # Project guides & documentation
-│   ├── skill.md               # Skills needed
-│   ├── planning.md            # Project planning
-│   ├── dataset.md             # Dataset knowledge
-│   ├── phase.md               # Phase-by-phase timeline
-│   ├── promt.md               # Code generation prompts
-│   ├── overview.md            # Project overview
-│   └── tracking.md            # Progress tracking
-├── phase1_asr/                # Phase 1: Speech Recognition
-│   ├── models/               # Trained ASR models
-│   ├── data/                 # Training data
-│   ├── scripts/               # Training scripts
-│   └── results/               # WER scores, outputs
-├── phase2_ner/                # Phase 2: Entity Recognition
-│   ├── models/               # Trained NER models
-│   ├── data/                 # Annotated data
-│   ├── scripts/               # Training scripts
-│   └── results/               # F1 scores, outputs
-├── phase3_ehr/                # Phase 3: EHR Generation
-│   ├── templates/            # EHR templates
-│   └── scripts/               # Generation scripts
-├── dataset/                   # Audio & text datasets
-├── notebooks/                 # Jupyter notebooks
-├── docs/                      # Documentation
-├── requirements.txt           # Python dependencies
-└── README.md                  # This file
+cse499-project/
+├── notebooks/                          # Colab notebooks (active work)
+│   ├── 00_project_setup.ipynb         # Environment & Drive setup
+│   ├── 01_data_download.ipynb         # YouTube data collection
+│   ├── 02_audio_preprocessing.ipynb   # Audio segmentation & cleaning
+│   ├── 03_model_comparison.ipynb      # Baseline ASR model evaluation
+│   ├── 04_bigger_model_comparison.ipynb # Larger ASR model evaluation
+│   └── 05_chatbot_comparison.ipynb    # Phase 5: AI chatbot EHR comparison
+│
+├── evaluation/                         # Model evaluation results
+│   ├── baseline_models/               # WER scores, charts, confusion matrices
+│   └── bigger_models/                 # Larger model metrics & comparisons
+│
+├── docs/                               # Written deliverables
+│   ├── submissions/                   # Graded assignment PDFs + LaTeX source
+│   └── literature_reviews/            # Paper reviews (EHR + other topics)
+│
+├── presentations/                      # Slide decks for demos & defenses
+│
+├── research/                           # Exploratory & background work
+│   ├── ideas/                         # Early project idea proposals
+│   ├── pitch_decks/                   # Pitch presentations (pre-selection)
+│   ├── gap_analysis_templates/        # Templates for paper reading & gaps
+│   └── archive/                       # Old drafts, guides, & backups
+│
+├── context_and_task.md                 # Project context & phase descriptions
+├── requirements.txt                    # Python dependencies
+└── README.md                           # This file
 ```
 
 ---
@@ -212,11 +213,10 @@ pip install -r requirements.txt
 ### 3. Set Up Google Drive
 Mount Google Drive in Colab for dataset and model storage.
 
-### 4. Follow the Guides
-See `/guide/` folder for detailed instructions:
-- `skill.md` - Skills needed
-- `phase.md` - Step-by-step execution
-- `tracking.md` - Progress tracking
+### 4. Understand the Project
+See `context_and_task.md` for the full project description and phase-by-phase progress.
+See `docs/` for submissions, literature reviews, and LaTeX sources.
+See `notebooks/` for the Colab notebooks (run in order: 00 → 05).
 
 ---
 
@@ -237,8 +237,8 @@ See `/guide/` folder for detailed instructions:
 ## Contributing
 
 This is an academic project. For questions:
-1. Check the guides in `/guide/`
-2. Review phase documentation
+1. Read `context_and_task.md` for project context
+2. Review `docs/` for submissions and literature reviews
 3. Contact team members
 
 ---

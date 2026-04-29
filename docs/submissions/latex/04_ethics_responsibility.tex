@@ -1,0 +1,430 @@
+% =====================================================================
+%  CSE499A — EHR Pre-Consultation Medical Documentation System
+%  Standalone section: Ethical and Professional Responsibility
+%  Authors: Rafiur Rahman Mashrafi (2221971042),
+%           M.G. Rabbi Hossen (2222516042),
+%           Israt Zaman Srity (2211084042)
+%  Advisor: Dr. Mohammad Ashrafuzzaman Khan [AzK]
+%  Department of Electrical and Computer Engineering,
+%  North South University · Spring 2026
+% =====================================================================
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{quoting}
+
+\onehalfspacing
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{1.5em}
+
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{0.7em}{}
+
+\title{\bfseries Ethical and Professional Responsibility:\\
+EHR-Based Pre-Consultation Medical Documentation System}
+\author{Rafiur Rahman Mashrafi (ID 2221971042)\\
+        M.~G.~Rabbi Hossen (ID 2222516042)\\
+        Israt Zaman Srity (ID 2211084042)\\[6pt]
+        \emph{Faculty Advisor:} Dr. Mohammad Ashrafuzzaman Khan [AzK]\\
+        Department of Electrical and Computer Engineering\\
+        North South University, Bangladesh}
+\date{Senior Design Project (CSE499A) \quad Spring 2026}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+This section examines the ethical and professional responsibilities
+that arise when building the
+\textit{EHR-Based Pre-Consultation Medical Documentation System}.
+The system handles three things at once that make ethical analysis
+non-optional: \textit{sensitive personal health data} of identifiable
+patients; \textit{language-dependent recognition} where errors fall
+unevenly on speakers of less-resourced dialects; and \textit{a
+clinical decision context} in which a misrecognised symptom or
+medication could lead to a wrong consultation. The discussion below
+is structured around the seven General Ethical Principles of the
+\textit{ACM Code of Ethics and Professional Conduct}~\cite{eth:acm2018}.
+For each principle, the project's design decisions are shown
+explicitly --- not as aspirations, but as concrete actions or
+boundaries already enforced in the system.
+
+The team treats the ACM Code as the binding professional standard
+for the software-engineering work of this project. The Code makes
+clear that it is not a series of abstract slogans but a tool that
+``the computing professional should consider in
+ethical decision-making''~\cite{eth:acm2018}. The seven principles
+in Section~1 of the Code (the General Ethical Principles) are
+treated below as numbered duties of the project team.
+
+\section{Mapping to the ACM Code of Ethics, Section 1}
+
+\subsection{ACM 1.1 --- Contribute to society and to human well-being,
+acknowledging that all people are stakeholders in computing}
+
+The Code asks software professionals to ``promote fundamental human
+well-being''~\cite{eth:acm2018} and to consider the effects of their
+work on \emph{all} affected parties --- not only the immediate
+purchaser. In the present project the well-being beneficiaries are
+multiple: the patient (who gains a system that listens in their own
+dialect), the physician (whose documentation burden is reduced), and
+the wider Bangladeshi public-health system, which currently lacks
+structured digital records in most small clinics.
+
+The team has taken three concrete actions toward this principle.
+First, the system is designed to assist patients who are
+under-served by existing English-only digital health tools, in
+particular rural and dialect-speaking populations. Second, it is
+explicitly assistive rather than prescriptive: the AI does not
+issue a diagnosis, and the physician's clinical authority is
+unchanged. Third, the project's empirical findings (the dataset, the
+benchmark scripts, the conclusion that small specialised models
+outperform 7B-parameter audio LLMs on dialect Bangla) are
+documented and shared in the public project repository so that they
+contribute to the wider Bangla-NLP research community rather than
+remaining locked inside one institution.
+
+\subsection{ACM 1.2 --- Avoid harm}
+
+The Code states that ``harm'' includes ``unjustified physical or
+mental injury, unjustified destruction or disclosure of information,
+and unjustified damage to property, reputation, and the
+environment''~\cite{eth:acm2018}. The most plausible harm pathway in
+this system is the propagation of an ASR or NER error into the
+clinical record, leading the physician toward a wrong line of
+inquiry. Three design choices mitigate this:
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Original transcript visibility.} The verbatim ASR
+transcript is always displayed alongside the structured record on
+the doctor's dashboard. The physician can compare the two at a
+glance and detect mis-extractions before they affect care.
+\item \textbf{No auto-confirmed prescriptions or diagnoses.} The
+system never recommends a specific drug, dose, or diagnosis. It
+surfaces conditions worth ruling out, which is decision support, not
+decision making.
+\item \textbf{Honest accuracy reporting.} Section~4 of the project
+report documents Word Error Rate, Character Error Rate, and BLEU on
+real dialect speech, including the failure cases. The physician
+sees an honest estimate of system reliability, not a marketing
+figure derived from a clean read-aloud benchmark.
+\end{enumerate}
+
+The Code further requires that ``the person doing the work has a
+responsibility to assess the risks and either mitigate them or
+inform affected parties.''~\cite{eth:acm2018} The accuracy
+limitations are explicitly named in the report's Limitations
+section so that affected parties (instructor, future
+implementers, and eventually clinicians) are informed.
+
+\subsection{ACM 1.3 --- Be honest and trustworthy}
+
+ACM 1.3 calls for transparency about ``system capabilities,
+limitations, and potential problems.''~\cite{eth:acm2018} The team
+has applied this in three places.
+
+\textit{In the model evaluation:} the report does not cherry-pick
+favourable models. All twelve baseline ASR models are reported,
+including the Whisper-Small case where Word Error Rate exceeds
+195\% (the model hallucinates more text than it transcribes). The
+two larger models that failed entirely (Phi-4 Multimodal,
+Qwen2.5-Omni) are reported as failures rather than excluded.
+
+\textit{In the description of project status:} the report
+distinguishes clearly between phases that are complete (Phases 1--3,
+the dataset and the two ASR benchmarks), a phase that is in progress
+as a \emph{research} activity (Phase~4, fine-tuning methodology
+study --- no training has actually been performed), and a phase that
+is selected but not yet executed (Phase~5, the chatbot comparison).
+The team rejects the temptation to imply more work has been done
+than is the case.
+
+\textit{In the description of fitness for clinical use:} the
+report does not claim the system is currently safe for clinical
+deployment. It is a Senior Design~I research artefact whose
+strongest baseline still mis-transcribes nearly half the words on
+real dialect audio. Any deployment claim would be premature, and
+the team does not make one.
+
+\subsection{ACM 1.4 --- Be fair and take action not to discriminate}
+
+ACM 1.4 requires that ``technologies and practices should be as
+inclusive and accessible as possible.''~\cite{eth:acm2018} For an
+ASR system, fairness is concretely measurable: does the model
+perform comparably across dialects, genders, age groups, and
+recording conditions? An ASR system that performs well on the speech
+of urban men in their twenties but poorly on the speech of rural
+older women would amplify existing healthcare inequalities rather
+than reduce them.
+
+The project addresses this in three ways:
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Multi-dialect data collection.} The Phase~1 corpus
+covers five regional varieties (Puran Dhaka, Barishali, Sylheti,
+Normal Bangla, Indian Bangla) rather than collapsing all input to a
+single ``standard'' Bangla. The Limitations section names two
+varieties (Chittagonian, Rangpuri) that are currently
+under-represented, scheduled for inclusion in CSE499B.
+\item \textbf{Demographic logging.} The dataset log records speaker
+gender and approximate age for every audio file. This makes
+per-group accuracy analysis possible and was an explicit decision
+to enable later fairness audits.
+\item \textbf{Voice-first by design.} The interface does not assume
+literacy, English fluency, or smartphone fluency. The Code's
+inclusion principle is operationalised at the interaction layer,
+not just at the model layer.
+\end{enumerate}
+
+The team is aware that data balancing alone does not eliminate bias
+and that a true fairness audit will require larger per-group sample
+sizes than CSE499A's 4.7-hour corpus permits.
+
+\subsection{ACM 1.5 --- Respect the work required to produce new
+ideas, inventions, creative works, and computing artifacts}
+
+ACM 1.5 covers proper attribution and respect for intellectual
+property. The project follows this in two specific practices.
+
+First, every model evaluated in the project is used under its
+publicly stated license, and the model authors are cited in the
+project's references. Pretrained checkpoints are downloaded from
+Hugging~Face's official repositories for Whisper, MMS, Wav2Vec~2.0,
+SeamlessM4T, the Qwen2/3-Audio family, BengaliAI, Vakyansh, Voxtral,
+and Phi-4 Multimodal --- not redistributed or modified silently.
+
+Second, the open-source software stack used in the project (PyTorch,
+Hugging~Face Transformers, Librosa, FFmpeg, WhisperX, jiwer, yt-dlp)
+is acknowledged in the report's Methodology chapter. The project's
+own contributions --- the dataset log, the evaluation scripts, and
+the comparative results CSV --- are released back into the public
+repository so that future students and researchers can build on
+this work without re-deriving it.
+
+\subsection{ACM 1.6 --- Respect privacy}
+
+ACM 1.6 states that ``computing professionals should only use
+personal information for legitimate ends and without violating the
+rights of individuals and groups.''~\cite{eth:acm2018} Audio
+recordings of patient speech are among the most sensitive personal
+data that exist: voice is a biometric identifier; health status is
+sensitive information under any reasonable data-protection regime.
+
+The project enforces six privacy controls, of which the first
+three apply already to the CSE499A research dataset and the
+remaining three are deployment-time requirements specified in the
+system design:
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{No real patient data in CSE499A.} The 4.7-hour Phase~1
+corpus consists of publicly available recordings, not real clinical
+encounters. No identifiable Bangladeshi patient's audio has been
+captured for this project.
+\item \textbf{Pseudonymous file naming.} The dataset log uses a
+fixed pattern of the form
+\textit{[dialect-code]\_[index]\_[gender]\_[age].mp3}
+rather than recording any speaker identity.
+\item \textbf{Restricted repository visibility for raw audio.} The
+GitHub project repository contains code, the dataset log, and
+evaluation results, but the raw audio files are kept in a
+controlled-access Google Drive folder rather than embedded in the
+public repository.
+\item \textbf{Informed consent at deployment.} The deployed system
+will require explicit, recorded informed consent in the patient's
+own language before any audio capture. Patients can opt out at any
+time without penalty.
+\item \textbf{Encryption at rest and in transit.} Audio blobs and
+EHR records will be encrypted both at rest and over the network,
+and access to the dashboard will be gated by role-based access
+control.
+\item \textbf{Data sovereignty.} Wherever feasible the deployed
+system will keep sensitive Bangladeshi health data on
+infrastructure located within Bangladesh rather than on foreign
+cloud providers.
+\end{enumerate}
+
+\subsection{ACM 1.7 --- Honor confidentiality}
+
+ACM 1.7 requires that confidentiality be honored ``except in cases
+where it is evidence of the violation of law''~\cite{eth:acm2018}.
+For this project the principle applies to two distinct types of
+confidential information.
+
+\textit{Patient-level confidentiality:} the EHR record produced by
+the pipeline is accessible only to the licensed physician and to
+authorised clinical staff under role-based access control. It is
+never shared with third parties for marketing, training, or
+analytics purposes without separate, explicit, opt-in consent.
+
+\textit{Project-level confidentiality:} the source audio used in
+CSE499A is from publicly available recordings, but the team treats
+even this as data to be handled responsibly --- not redistributed
+casually, not used for purposes other than the stated research, and
+clearly attributed to its source in the dataset log.
+
+\section{Mapping to the ACM Code of Ethics, Section 2:
+Professional Responsibilities}
+
+Section~2 of the ACM Code lists professional responsibilities that
+extend the General Principles to working software professionals.
+Three of these are particularly load-bearing for the project.
+
+\subsection{ACM 2.5 --- Give comprehensive and thorough evaluations
+of computer systems and their impacts, including analysis of
+possible risks}
+
+The project's own internal evaluation discipline is designed
+precisely to satisfy this principle. The Phase~2 and Phase~3
+benchmarks were comprehensive: twelve baseline ASR models and six
+larger multimodal audio LLMs were each evaluated across three
+metrics (WER, CER, BLEU) on the same multi-dialect corpus, and the
+results --- including failures --- were documented. The risk
+analysis in this section names the harm pathways (mis-extraction,
+fairness failure, privacy breach) explicitly.
+
+\subsection{ACM 2.6 --- Perform work only in areas of competence}
+
+ACM 2.6 cautions professionals to ``perform work only in areas of
+competence''~\cite{eth:acm2018}. The team is explicit that medical
+diagnosis is \emph{not} the team's area of competence. This is why
+the system never issues a diagnosis: that judgment is reserved for
+the licensed physician. The team's areas of competence ---
+machine-learning engineering, speech recognition evaluation,
+software-system design --- are exactly the parts of the system that
+the team builds and reports on. The differential-diagnosis
+\emph{hint layer} that surfaces conditions worth ruling out will be
+constructed in CSE499B in consultation with clinical advisors, not
+authored by the engineering team alone.
+
+\subsection{ACM 2.9 --- Design and implement systems that are
+robustly and usably secure}
+
+ACM 2.9 lists security as a professional duty. The system design
+specifies authentication (JWT), role-based access control,
+encryption at rest and in transit, audit logging on the dashboard,
+and pseudonymous identifiers in the audio store. The deployment
+plan additionally calls for keeping audio and EHR records on
+infrastructure located within Bangladesh wherever feasible, which is
+a security as well as a sovereignty consideration.
+
+\section{Other Applicable Codes and Standards}
+
+Beyond the ACM Code, the project also takes guidance from:
+
+\begin{itemize}[leftmargin=*]
+\item the \textbf{IEEE Code of
+Ethics}~\cite{eth:ieee}, in particular its first commitment ``to
+hold paramount the safety, health, and welfare of the public,''
+which is consistent with the project's decision to keep the
+physician as the final clinical authority;
+\item the \textbf{Software Engineering Code of Ethics}
+(IEEE-CS / ACM)~\cite{eth:secode}, with its eight principles
+covering public interest, client/employer, product, judgement,
+management, profession, colleagues, and self;
+\item the \textbf{WHO ``Ethics and Governance of AI for
+Health''} guidance~\cite{eth:who}, whose six principles --- protect
+autonomy, promote human well-being, ensure transparency,
+foster responsibility, ensure inclusiveness, promote sustainable AI
+--- align directly with the design choices already enumerated in
+this section.
+\end{itemize}
+
+The project also anticipates compliance with the emerging Bangladesh
+data-protection framework when the system is moved from research
+artefact to clinical deployment.
+
+\section{Conclusion}
+
+The ACM Code of Ethics is not a checklist that one applies once at
+the end of a project; it is, as the Code itself
+states~\cite{eth:acm2018}, a tool for ongoing ethical
+decision-making throughout development. The team has tried to use
+it that way. Each of the seven General Ethical Principles maps onto
+specific design decisions the project has already made:
+sharing of dataset and evaluation artefacts (1.1), transcript
+visibility and no auto-confirmed prescriptions (1.2), honest
+reporting of model failures and project status (1.3), multi-dialect
+coverage with demographic logging (1.4), proper attribution of all
+models and tools used (1.5), six concrete privacy controls (1.6),
+and role-based confidentiality both at the patient level and at the
+project level (1.7). The professional responsibilities of Section~2
+of the Code ---  comprehensive evaluation, working within
+competence, building robustly secure systems --- are similarly
+operationalised in the empirical chapters of the project report and
+in the planned deployment-layer work for CSE499B.
+
+The most important ethical commitment, restated from the system
+design and worth repeating in this section, is the assistive
+boundary: the AI helps the physician; the AI does not replace the
+physician. The licensed clinician remains the final and
+accountable decision-maker at every step of the consultation. The
+team believes that holding to this boundary --- and being honest
+about the system's current limitations --- is the most
+professionally responsible position consistent with the ACM Code.
+
+% =====================================================================
+% REFERENCES
+% =====================================================================
+\begin{thebibliography}{99}
+
+\bibitem{eth:acm2018}
+ACM Council,
+``ACM Code of Ethics and Professional Conduct,'' 2018.
+\url{https://www.acm.org/code-of-ethics}.
+
+\bibitem{eth:ieee}
+IEEE,
+``IEEE Code of Ethics,'' 2020.
+\url{https://www.ieee.org/about/corporate/governance/p7-8.html}.
+
+\bibitem{eth:secode}
+IEEE-CS / ACM Joint Task Force on Software Engineering Ethics,
+``Software Engineering Code of Ethics and Professional Practice,''
+Version 5.2, 1999.
+\url{https://ethics.acm.org/code-of-ethics/software-engineering-code/}.
+
+\bibitem{eth:who}
+World Health Organization,
+``Ethics and Governance of Artificial Intelligence for Health:
+WHO Guidance,'' 2021.
+\url{https://www.who.int/publications/i/item/9789240029200}.
+
+\bibitem{eth:beauchamp}
+T.~L.~Beauchamp and J.~F.~Childress,
+\emph{Principles of Biomedical Ethics}, 8th ed.,
+Oxford University Press, 2019.
+
+\bibitem{eth:char}
+D.~S.~Char, N.~H.~Shah, and D.~Magnus,
+``Implementing Machine Learning in Health Care --- Addressing
+Ethical Challenges,''
+\emph{New England Journal of Medicine}, vol.~378, pp.~981--983,
+2018.
+
+\bibitem{eth:vayena}
+E.~Vayena, A.~Blasimme, and I.~G.~Cohen,
+``Machine Learning in Medicine: Addressing Ethical Challenges,''
+\emph{PLOS Medicine}, vol.~15, no.~11, e1002689, 2018.
+
+\bibitem{eth:gdpr}
+European Parliament and Council of the European Union,
+``Regulation (EU) 2016/679 (General Data Protection Regulation),''
+2016.
+\url{https://gdpr-info.eu}.
+
+\end{thebibliography}
+
+\end{document}

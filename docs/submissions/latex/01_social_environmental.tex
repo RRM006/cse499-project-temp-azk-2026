@@ -1,0 +1,292 @@
+% =====================================================================
+%  CSE499A — EHR Pre-Consultation Medical Documentation System
+%  Standalone section: Social and Environmental Effects
+%  Authors: Rafiur Rahman Mashrafi (2221971042),
+%           M.G. Rabbi Hossen (2222516042),
+%           Israt Zaman Srity (2211084042)
+%  Advisor: Dr. Mohammad Ashrafuzzaman Khan [AzK]
+%  Department of Electrical and Computer Engineering,
+%  North South University · Spring 2026
+% =====================================================================
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+\onehalfspacing
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{1.5em}
+
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{0.7em}{}
+
+\title{\bfseries Social and Environmental Effects of the\\
+EHR-Based Pre-Consultation Medical Documentation System}
+\author{Rafiur Rahman Mashrafi (ID 2221971042)\\
+        M.~G.~Rabbi Hossen (ID 2222516042)\\
+        Israt Zaman Srity (ID 2211084042)\\[6pt]
+        \emph{Faculty Advisor:} Dr. Mohammad Ashrafuzzaman Khan [AzK]\\
+        Department of Electrical and Computer Engineering\\
+        North South University, Bangladesh}
+\date{Senior Design Project (CSE499A) \quad Spring 2026}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+This section examines the social and environmental effects of the
+\textit{EHR-Based Pre-Consultation Medical Documentation System}, a
+voice-driven pipeline that turns a patient's spoken description of
+their symptoms in Bangla --- including regional dialects and
+Bangla--English code-mixing --- into a structured Electronic Health
+Record (EHR) before the consultation begins. Because the system
+intersects healthcare, language, and AI, its effects extend well
+beyond a single clinic: it touches how Bangladeshi patients
+communicate with the formal medical system, how doctors spend their
+limited consultation time, and how computational resources are used
+to serve a low-resource language. The discussion below treats social
+and environmental impact separately, then closes with the project's
+alignment to the United Nations Sustainable Development Goals (SDGs).
+
+\section{Social Effects}
+
+\subsection{Reclaiming consultation time for clinical care}
+The Bangladeshi public-health system operates with a chronic
+imbalance between patient demand and physician supply. According to
+the World Health Organization, the country has roughly seven
+physicians per 10{,}000 population~\cite{rep:who}. In a typical
+outpatient consultation a substantial portion of the limited time is
+spent on history-taking and handwritten note preparation rather than
+on examination and decision-making. By absorbing the documentation
+work into the waiting period --- the patient describes their history
+to a tablet or kiosk before meeting the doctor --- the proposed
+system returns those minutes to actual clinical reasoning. The
+projected effect is therefore not ``faster consultations,'' which
+would be undesirable, but \emph{better} consultations of the same
+duration: the doctor walks in already knowing the patient's story.
+
+\subsection{Voice-first inclusion of low-literacy and rural patients}
+A second, often-overlooked social effect concerns who can use a
+digital health tool at all. The majority of patients outside Dhaka
+cannot type fluently in Bangla on a touchscreen, and most cannot use
+English-language health applications. Existing Bangladeshi
+``digital health'' offerings --- when they exist --- typically assume
+literacy and English fluency, and therefore exclude precisely the
+populations who most need primary-care support. A voice-first design
+inverts this assumption. The patient speaks in whatever Bangla they
+naturally use; the system meets them halfway. Crucially, the project's
+empirical commitment to dialect coverage (Puran Dhaka, Barishali,
+Sylheti, Normal Bangla, Indian Bangla, with Chittagonian and
+Rangpuri planned for the next phase) means that the system does not
+\emph{force} patients to ``correct'' their speech to a textbook
+register. This is a small but meaningful act of dignity: rural and
+dialect-speaking patients are addressed by the technology in their
+own language, not in a sanitized standard variety.
+
+\subsection{Impact on physicians}
+Physicians are themselves a stakeholder group whose work the system
+will alter. The intended effect is reduction of clerical burden:
+fewer minutes of manual note-taking, fewer handwriting errors, and a
+durable structured record that can be retrieved at follow-up visits.
+The system is explicitly assistive --- it never issues a diagnosis
+and never auto-confirms a prescription --- so the physician's
+clinical authority is unchanged. The original transcript is always
+displayed alongside the extracted entities, so the physician can
+verify or correct any misrecognition at a glance. This design choice
+is deliberate: a system that hides what it understood from the
+physician would erode trust quickly, particularly in a setting
+where the doctor is professionally and legally accountable for the
+final decision.
+
+\subsection{Cultural impact and Bangla-language preservation}
+On a longer horizon, the project contributes to a small but real
+cultural good: it puts dialect Bangla into AI infrastructure. Most
+existing Bangla speech and language models are trained on a single
+``standard'' register drawn from news, audiobooks, and read sentences.
+The dialects spoken by tens of millions of Bangladeshis are
+under-represented in this AI infrastructure or actively normalized
+out. By collecting, modeling, and reporting separately on each
+regional variety, the project legitimizes those varieties as
+first-class objects of computational study. The dataset and
+benchmark scripts produced by the project are publicly hosted, so the
+contribution outlives the immediate clinical use case.
+
+\subsection{Risks to be managed}
+Any system that touches sensitive health information carries
+risks that must be actively managed rather than assumed away.
+Three are particularly relevant.
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Privacy and consent.} Audio recordings of patient
+speech are highly identifying personal data. The deployment plan
+requires explicit, recorded informed consent in the patient's own
+language before any audio capture, plus opt-out at any time without
+penalty. Audio is encrypted at rest and in transit, and the deployed
+infrastructure will keep data on local servers wherever feasible.
+
+\item \textbf{Accuracy and harm from errors.} An ASR
+mis-transcription that propagates into the EHR could in principle
+mislead a physician. The system mitigates this in two ways: the
+original audio transcript is always shown beside the extracted
+record, and the system never recommends a prescription. Reported
+accuracy figures (Word Error Rate, Character Error Rate, BLEU) are
+computed on real dialect speech, not on clean read-aloud benchmarks,
+so the limitations are visible to the physician.
+
+\item \textbf{Equity across dialects.} A model that performs well on
+``standard Bangla'' but poorly on Sylheti or Chittagonian would
+amplify rather than reduce the urban--rural digital divide.
+The benchmark methodology in the present project is designed to
+detect such gaps; the planned fine-tuning phase will explicitly
+balance per-dialect representation in the training data.
+\end{enumerate}
+
+\section{Environmental Effects}
+
+\subsection{Computational footprint of CSE499A}
+The dominant environmental impact of an AI project is the
+electricity consumed during model training and large-scale inference.
+For CSE499A, all twelve baseline ASR models and the six larger
+multimodal audio language models were used in \emph{inference mode
+only}; no end-to-end training run was conducted, and no model was
+trained from scratch. The cumulative GPU consumption across the two
+benchmarks is on the order of tens of GPU-hours on free-tier Google
+Colab T4 and A100 instances. This is a deliberately small footprint:
+the goal of CSE499A was empirical model selection, not training.
+
+\subsection{Choice of a mid-sized model for fine-tuning}
+The empirical headline finding from CSE499A --- that 1.7B--7B
+parameter multimodal audio language models underperform a smaller
+Bangla-specialized baseline by more than 50 percentage points of WER
+--- has a direct sustainability benefit. It justifies selecting a
+mid-sized model (Qwen3-ASR-1.7B) for the planned fine-tuning rather
+than a 7B-parameter audio LLM. A smaller model trains faster,
+performs inference faster at deployment, and consumes substantially
+less energy across its operational lifetime.
+
+\subsection{Parameter-efficient fine-tuning}
+The planned fine-tuning approach in CSE499B will use Low-Rank
+Adaptation (LoRA), which freezes the base model's weights and trains
+only small low-rank adapter matrices. LoRA reduces the compute and
+memory footprint of fine-tuning by approximately one to two orders
+of magnitude versus full fine-tuning, with proportional reduction in
+electricity consumption. This is a substantive --- not cosmetic ---
+sustainability decision: full fine-tuning of a 1.7B-parameter audio
+model on the project's compute budget would not be feasible, but a
+LoRA adapter run on a single A100 instance is.
+
+\subsection{Edge inference at deployment}
+At deployment, the trained model is intended to run on modest
+clinic-side hardware: a single mid-range GPU, or a quantized CPU
+build for clinics without GPU access. This avoids continuous
+high-power cloud inference for every patient interaction. The
+patient-facing capture device is a consumer tablet or kiosk; no
+custom hardware is fabricated. From a lifecycle perspective, the
+project therefore consumes no new manufacturing energy beyond what
+already exists in commodity tablets.
+
+\subsection{Paper reduction}
+A small but real environmental benefit is paper reduction. The
+current state of small Bangladeshi clinics is paper-heavy:
+prescriptions, hand-written notes, paper patient charts. A digital
+EHR pipeline displaces a portion of this paper consumption.
+
+\section{Alignment with the UN Sustainable Development Goals}
+
+The project supports the following SDGs.
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{SDG 3 --- Good Health and Well-being.} Improving the
+quality of primary-care consultations and introducing structured
+health records to clinics that currently have none directly serves
+this goal.
+\item \textbf{SDG 4 --- Quality Education.} The dialect dataset and
+the open-source code, evaluation scripts, and benchmark results
+contribute to educational and research resources for Bangla speech
+and clinical NLP.
+\item \textbf{SDG 9 --- Industry, Innovation and Infrastructure.} The
+project develops domestic AI capacity for a sector (digital health)
+that is currently dependent on foreign English-only tools.
+\item \textbf{SDG 10 --- Reduced Inequalities.} A voice-first,
+dialect-aware system explicitly serves rural and low-literacy
+populations under-served by existing digital health offerings.
+\item \textbf{SDG 13 --- Climate Action.} The project's preference
+for small specialized models and parameter-efficient fine-tuning is
+a concrete (if modest) reduction in AI energy consumption per unit
+of clinical value delivered.
+\end{itemize}
+
+\section{Conclusion}
+
+The proposed system's social effects are strongest where Bangladesh's
+existing healthcare infrastructure is weakest: in small clinics,
+among low-literacy and dialect-speaking patients, and during the
+short consultation windows that a typical primary-care visit
+allows. Its environmental footprint, by deliberate design, is small
+relative to comparable AI projects: inference-only evaluation in
+CSE499A, a mid-sized rather than 7B-parameter target model for
+fine-tuning, parameter-efficient adapter training, and edge
+inference at deployment. Both effects align with the broader UN
+sustainability agenda, particularly SDGs 3, 9, 10, and 13. The risks
+that genuinely deserve management --- privacy, accuracy, dialect
+equity --- are addressed through specific design choices (consent,
+encryption, transcript visibility, balanced dialect data) rather
+than through generic disclaimers.
+
+% =====================================================================
+% REFERENCES
+% =====================================================================
+\begin{thebibliography}{99}
+
+\bibitem{rep:who}
+World Health Organization,
+``Density of Physicians (per 1000 population), Bangladesh,'' 2023.
+\url{https://data.who.int/countries/050}.
+Online; accessed April 2026.
+
+\bibitem{rep:radford}
+A.~Radford, J.~W.~Kim, T.~Xu, G.~Brockman, C.~McLeavey,
+and I.~Sutskever,
+``Robust Speech Recognition via Large-Scale Weak Supervision,''
+in \emph{Proc.\ 40th Int.\ Conf.\ on Machine Learning (ICML)},
+pp.~28492--28518, 2023.
+\url{https://arxiv.org/abs/2212.04356}.
+
+\bibitem{rep:mms}
+V.~Pratap \emph{et al.},
+``Scaling Speech Technology to 1{,}000+ Languages,''
+\emph{arXiv preprint arXiv:2305.13516}, 2023.
+\url{https://arxiv.org/abs/2305.13516}.
+
+\bibitem{rep:lora}
+E.~J.~Hu \emph{et al.},
+``LoRA: Low-Rank Adaptation of Large Language Models,''
+in \emph{Int.\ Conf.\ on Learning Representations (ICLR)}, 2022.
+\url{https://arxiv.org/abs/2106.09685}.
+
+\bibitem{rep:oodspeech}
+F.~R.~Rakib \emph{et al.},
+``OOD-Speech: A Large Bengali Speech Recognition Dataset for
+Out-of-Distribution Benchmarking,''
+in \emph{Proc.\ INTERSPEECH 2023}.
+\url{https://arxiv.org/abs/2305.09688}.
+
+\bibitem{rep:un}
+United Nations,
+``The 17 Goals --- Sustainable Development,''
+United Nations Department of Economic and Social Affairs.
+\url{https://sdgs.un.org/goals}.
+Online; accessed April 2026.
+
+\end{thebibliography}
+
+\end{document}
