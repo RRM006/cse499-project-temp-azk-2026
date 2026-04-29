@@ -10,10 +10,12 @@ This is a CSE499 capstone project that develops an AI system to automatically co
 
 ### Core Functionality
 
-The system processes patient voice through three phases:
-1. **Automatic Speech Recognition (ASR)** - Converts Bangla speech to text
-2. **Medical Named Entity Recognition (NER)** - Extracts medical entities from text
-3. **Rule-based EHR Template Filler** - Generates structured EHR documents
+The system operates as a five-stage pipeline:
+1. **Patient Speech Capture** - Voice input via kiosk/tablet.
+2. **Automatic Speech Recognition (ASR)** - Converts Bangla dialect/code-mixed speech to text.
+3. **Medical Named Entity Recognition (NER)** - Extracts symptoms, diseases, medications, etc.
+4. **Structured EHR Construction** - Normalizes and structures the data.
+5. **Doctor Dashboard** - Displays EHR, original transcript, and differential-diagnosis hints.
 
 ---
 
@@ -40,31 +42,34 @@ The system processes patient voice through three phases:
 
 ## System Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
-│                    PATIENT VOICE INPUT                      │
-│         (Bangla / Dialects / Code-mixed Speech)           │
+│                 STAGE 1: PATIENT SPEECH                     │
+│         (Bangla / Dialects / Code-mixed Speech)             │
 └─────────────────────────────┬───────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                  PHASE 1: ASR (Speech to Text)             │
-│  Models: Whisper, Wav2Vec2, HuBERT, WavLM, XLSR-53...    │
-│  Output: Bengali Text Transcription                        │
+│                 STAGE 2: ASR (Speech to Text)               │
+│  Models: BengaliAI, Whisper, Wav2Vec2, Qwen3-ASR...         │
 └─────────────────────────────┬───────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│               PHASE 2: NER (Entity Extraction)             │
-│  Models: BanglaBERT, XLM-RoBERTa, mBERT, DistilBERT...    │
-│  Output: Tagged Medical Entities                           │
+│                 STAGE 3: Medical NER                        │
+│  Extraction: Symptoms, meds, duration, allergies            │
 └─────────────────────────────┬───────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│               PHASE 3: EHR Template Filler                 │
-│  Method: Rule-based Entity Mapping                         │
-│  Output: Structured EHR (JSON + Human Readable)            │
+│                 STAGE 4: Structured EHR                     │
+│  Standard format (JSON + Human Readable)                    │
+└─────────────────────────────┬───────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                 STAGE 5: Doctor Dashboard                   │
+│  UI with EHR, transcript, and differential-diagnosis hints  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -91,29 +96,15 @@ The system processes patient voice through three phases:
 
 ## Technical Details
 
-### Phase 1: ASR Models
-- **Whisper** (OpenAI) - Primary model
-- **Wav2Vec2** (Facebook AI)
-- **HuBERT** (Facebook AI)
-- **WavLM** (Microsoft)
-- **XLSR-53** (Cross-lingual)
-- **Data2Vec** (Meta)
-- **Canary** (Nvidia)
-- **OLMoASR**
-- **Reka Speech**
-- **MMS** (Meta - 1000+ languages)
+### ASR Models Evaluated
+- **Baseline Models:** Whisper (Small/Medium/Large/Turbo), Wav2Vec2 (XLSR-53, 300M, CV-Bengali), MMS, Vakyansh-Bn, BengaliAI Whisper, BengaliAI Regional, SeamlessM4T. (Strongest: BengaliAI Regional)
+- **Larger Multimodal Models:** Qwen2-Audio, Qwen3-ASR-1.7B, Voxtral-Mini, Phi-4 Multimodal, Qwen2.5-Omni. 
+- **Fine-Tuning Target:** Qwen3-ASR-1.7B (using LoRA)
 
-### Phase 2: NER Models
-- **BanglaBERT** - Primary model
-- **XLM-RoBERTa**
-- **mBERT**
-- **DistilBERT**
-- **ELECTRA**
-
-### Phase 3: EHR Generation
-- Rule-based entity mapping
-- JSON template filler
-- Human-readable output generator
+### NER & Application Stack
+- **NER Model:** BanglaBERT (Token Classification)
+- **Planned Backend:** FastAPI, PostgreSQL
+- **Planned Frontend:** React / Next.js (Dashboard), Flutter / PWA (Patient App)
 
 ---
 
@@ -138,14 +129,15 @@ The system processes patient voice through three phases:
 
 ## Tools & Resources
 
-### Free Tools Used
+### Key Software Components
 | Tool | Purpose |
 |------|---------|
-| Google Colab | Coding & Training |
-| Google Drive | File Storage |
-| GitHub | Version Control |
-| Hugging Face | Pre-trained Models |
-| YouTube | Data Collection |
+| **Python 3.10 / PyTorch** | Core implementation and deep learning framework |
+| **HF Transformers / Datasets** | Model loading, inference, and fine-tuning (PEFT/LoRA) |
+| **WhisperX** | Long-form audio segmentation and forced alignment |
+| **Librosa / FFmpeg** | Audio I/O and preprocessing |
+| **Google Colab (T4, A100)** | Primary GPU compute |
+| **yt-dlp** | Public-source audio collection |
 
 **Budget:** ৳0 (Zero Taka - All tools are free)
 
@@ -186,14 +178,15 @@ cse499-project/
 
 ---
 
-## Timeline
+## Project Progress / Phases
 
-| Phase | Duration | Key Milestone |
-|-------|----------|---------------|
-| Phase 1: ASR | Weeks 1-9 | Working speech recognition |
-| Phase 2: NER | Weeks 10-15 | Working entity extraction |
-| Phase 3: EHR | Weeks 15-17 | Complete pipeline |
-| Final | Weeks 17-18 | Documentation & Presentation |
+| Phase | Description | Status |
+|-------|-------------|--------|
+| **Phase 1** | Audio collection & preprocessing (4.7h multi-dialect Bangla) | Completed |
+| **Phase 2** | Baseline ASR benchmark (12 open-source models) | Completed |
+| **Phase 3** | Larger multimodal audio LLM benchmark (2B-7B parameters) | Completed |
+| **Phase 4** | Qwen3-ASR-1.7B fine-tuning research (LoRA) | In Progress |
+| **Phase 5** | Comparative chatbot output study (EHR schema design) | Pending |
 
 ---
 
